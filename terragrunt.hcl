@@ -1,0 +1,30 @@
+// This is the root terragrunt.hcl file.
+// It contains the configuration that is shared across all environments.
+
+// Configure the remote state backend.
+// Terragrunt will automatically create the GCS bucket if it doesn't exist.
+remote_state {
+  backend = "gcs"
+  generate = {
+    path      = "backend.tf"
+    if_exists = "overwrite_terragrunt"
+  }
+  config = {
+    bucket  = "fred-gke-tfstate" // The GCS bucket you created
+    prefix  = "${path_relative_to_include()}/terraform.tfstate"
+    project = "fred-playground"
+  }
+}
+
+// Configure the Google provider.
+// Terragrunt will generate a provider.tf file in each module.
+generate "provider" {
+  path      = "provider.tf"
+  if_exists = "overwrite_terragrunt"
+  contents  = <<EOF
+provider "google" {
+  project = "fred-playground"
+  region  = "europe-west9"
+}
+EOF
+}
