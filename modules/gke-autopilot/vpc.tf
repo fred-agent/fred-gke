@@ -1,25 +1,25 @@
-# Création du VPC
+# Create the Virtual Private Cloud (VPC) network
 resource "google_compute_network" "vpc" {
   name                    = var.network_name
   auto_create_subnetworks = false
 }
 
-# Création du sous-réseau avec plages IP secondaires pour GKE
+# Create the subnetwork with secondary IP ranges for GKE
 resource "google_compute_subnetwork" "subnet" {
   name          = "${var.network_name}-subnet"
   region        = var.region
   network       = google_compute_network.vpc.name
-  ip_cidr_range = "10.0.0.0/24"
+  ip_cidr_range = var.subnet_ip_cidr_range
 
-  # Plage pour les Pods
+  # IP range for the Pods
   secondary_ip_range {
     range_name    = "pods-range"
-    ip_cidr_range = "10.1.0.0/16"
+    ip_cidr_range = var.pods_ip_cidr_range
   }
 
-  # Plage pour les Services
+  # IP range for the Services
   secondary_ip_range {
     range_name    = "services-range"
-    ip_cidr_range = "10.2.0.0/20"
+    ip_cidr_range = var.services_ip_cidr_range
   }
 }

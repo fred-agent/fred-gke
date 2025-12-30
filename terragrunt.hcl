@@ -1,6 +1,12 @@
 // This is the root terragrunt.hcl file.
 // It contains the configuration that is shared across all environments.
 
+// Define common variables for all environments in this project.
+locals {
+  project_id = "fred-playground"
+  region     = "europe-west9"
+}
+
 // Configure the remote state backend.
 // Terragrunt will automatically create the GCS bucket if it doesn't exist.
 remote_state {
@@ -10,9 +16,9 @@ remote_state {
     if_exists = "overwrite_terragrunt"
   }
   config = {
-    bucket  = "fred-gke-tfstate" // The GCS bucket you created
-    prefix  = "${path_relative_to_include()}/terraform.tfstate"
-    project = "fred-playground"
+    bucket   = "fredlab-playground-tf-state" // The GCS bucket you created
+    location = local.region
+    project = local.project_id
   }
 }
 
@@ -23,8 +29,8 @@ generate "provider" {
   if_exists = "overwrite_terragrunt"
   contents  = <<EOF
 provider "google" {
-  project = "fred-playground"
-  region  = "europe-west9"
+  project = "${local.project_id}"
+  region  = "${local.region}"
 }
 EOF
 }

@@ -2,19 +2,19 @@ resource "google_container_cluster" "primary" {
   name     = var.cluster_name
   location = var.region
 
-  # Activation du mode Autopilot
+  # Enable Autopilot mode for a hands-off, fully managed cluster
   enable_autopilot = true
 
-  # Configuration Réseau
+  # Network configuration to place the cluster in our custom VPC
   network    = google_compute_network.vpc.name
   subnetwork = google_compute_subnetwork.subnet.name
 
-  # Configuration des IPs (Pods et Services)
+  # IP allocation policy to use the secondary ranges from our subnet
   ip_allocation_policy {
     cluster_secondary_range_name  = "pods-range"
     services_secondary_range_name = "services-range"
   }
 
-  # Protection contre la suppression (mettre à true pour la prod)
-  deletion_protection = false
+  # Deletion protection should be enabled for production environments
+  deletion_protection = var.deletion_protection
 }
