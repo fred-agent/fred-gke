@@ -18,7 +18,8 @@ remote_state {
   config = {
     bucket   = "fredlab-playground-tf-state" // The GCS bucket you created
     location = local.region
-    project = local.project_id
+    project  = local.project_id
+    prefix   = "${path_relative_to_include()}/terraform.tfstate"
   }
 }
 

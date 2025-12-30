@@ -2,6 +2,8 @@
 resource "google_compute_network" "vpc" {
   name                    = var.network_name
   auto_create_subnetworks = false
+
+  depends_on = [google_project_service.apis]
 }
 
 # Create the subnetwork with secondary IP ranges for GKE

@@ -40,3 +40,12 @@ variable "services_ip_cidr_range" {
   description = "The secondary IP address range for the GKE Services."
   type        = string
 }
+
+variable "project_apis" {
+  description = "A list of Google Cloud APIs to enable in the project."
+  type        = list(string)
+  default = [
+    "compute.googleapis.com",
+    "container.googleapis.com"
+  ]
+}
